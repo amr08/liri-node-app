@@ -1,8 +1,12 @@
 //globals
   var fs = require("fs");
   var keys = require('./keys.js');
-  var Twitter = require('twitter');
   var userInput = process.argv[2];
+  var userSpotify = process.argv[3];
+
+  var Twitter = require('twitter');
+  var spotify = require('spotify');
+  // var request = require("request");
 
 
 //TWITTER
@@ -18,11 +22,35 @@
           if (userInput == "my-tweets") {
                console.log(tweets)
              }
-});
+      });
 
 
-
-  // var request = require("request");
 
 
 //SPOTIFY
+
+      spotify.search({ type: 'track', query: userSpotify }, function(err, data) {
+          if ( err ) {
+              console.log('Error occurred: ' + err);
+              return;
+            }
+
+
+          if (userInput == "spotify-this-song" && userSpotify) {
+              console.log("Artist: " + data.tracks.items[0].artists[0].name);
+              console.log("Song Title: " + data.tracks.items[0].name);
+              console.log("Link to Song: " + data.tracks.items[0].href);
+              console.log("Album: " + data.tracks.items[0].album.name);
+
+            }
+          //  else {
+          //     var userSpotify = "the sign";
+           //
+          //     console.log("Artist: " + data.tracks.items[6].artists[0].name);
+          //     console.log("Song Title: " + data.tracks.items[6].name);
+          //     console.log("Link to Song: " + data.tracks.items[6].href);
+          //     console.log("Album: " + data.tracks.items[6].album.name);
+           //
+          //   }
+console.log(userSpotify)
+      });
