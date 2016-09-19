@@ -1,8 +1,8 @@
 //globals
   var fs = require("fs");
   var keys = require('./keys.js');
-  var userInput = process.argv[2];
-  var userSpotify = process.argv[3];
+  var userCommand = process.argv[2];
+  var userSearch = process.argv[3];
 
   var Twitter = require('twitter');
   var spotify = require('spotify');
@@ -19,7 +19,7 @@
           if (!error) {
              }
 
-          if (userInput == "my-tweets") {
+          if (userCommand == "my-tweets") {
                console.log(tweets)
              }
       });
@@ -27,8 +27,8 @@
 
 //SPOTIFY
 
-  if (userInput == "spotify-this-song" && userSpotify) {
-      spotify.search({ type: 'track', query: userSpotify }, function(err, data) {
+  if (userCommand == "spotify-this-song" && userSearch) {
+      spotify.search({ type: 'track', query: userSearch}, function(err, data) {
           if ( err ) {
                 console.log('Error occurred: ' + err);
                 return;
@@ -43,9 +43,9 @@
       });
     }
 
-    else if (userInput == "spotify-this-song" && "undefined") {
-        var userSpotify = "the sign";
-        spotify.search({ type: 'track', query: userSpotify }, function(err, data) {
+    else if (userCommand == "spotify-this-song" && "undefined") {
+        var userChoice = "the sign";
+        spotify.search({ type: 'track', query: userChoice }, function(err, data) {
             if ( err ) {
                 console.log('Error occurred: ' + err);
                 return;
@@ -63,22 +63,43 @@
 
 //IMDB
 
-    var queryUrl = "http://www.omdbapi.com/?t=" + userInput + "&y=&plot=short&r=json";
+    var queryUrl = "http://www.omdbapi.com/?t=" + userSearch + "&y=&tomatoes=true&plot=short&r=json";
+        if (userCommand == "movie-this" && userSearch) {
+            request(queryUrl, function(error, response, body) {
 
-      request(queryUrl, function(error, response, body) {
+	               if(!error && response.statusCode == 200) {
 
-	         if(!error && response.statusCode == 200) {
+    	            console.log("Title: " + JSON.parse(body)["Title"]);
+                  console.log("Year: " + JSON.parse(body)["Year"]);
+                  console.log("Country: " + JSON.parse(body)["Country"]);
+                  console.log("Language: " + JSON.parse(body)["Language"]);
+                  console.log("Plot: " + JSON.parse(body)["Plot"]);
+                  console.log("Actors: " + JSON.parse(body)["Actors"]);
+                  console.log("Rotten Tomatoes Rating: " + JSON.parse(body)["tomatoRating"]);
+                  console.log("Rotten Tomatoes URL: " + JSON.parse(body)["tomatoURL"]);
 
+                }
+              });
+            }
 
-	            console.log("Title: " + JSON.parse(body)["Title"]);
-              console.log("Year: " + JSON.parse(body)["Year"]);
-              console.log("Country: " + JSON.parse(body)["Country"]);
-              console.log("Language: " + JSON.parse(body)["Language"]);
-              console.log("Plot: " + JSON.parse(body)["Plot"]);
-              console.log("Actors: " + JSON.parse(body)["Actors"])
+                else if (userCommand == "movie-this" && "undefined") {
 
-              //  		* Rotten Tomatoes Rating.
-              //  		* Rotten Tomatoes URL.
-              }
+                  var userSearch = "Mr. Nobody";
+                  var queryUrl = "http://www.omdbapi.com/?t=" + userSearch + "&y=&tomatoes=true&plot=short&r=json";
+                  request(queryUrl, function(error, response, body) {
 
-          });
+      	               if(!error && response.statusCode == 200) {
+
+                      console.log("Title: " + JSON.parse(body)["Title"]);
+                      console.log("Year: " + JSON.parse(body)["Year"]);
+                      console.log("Country: " + JSON.parse(body)["Country"]);
+                      console.log("Language: " + JSON.parse(body)["Language"]);
+                      console.log("Plot: " + JSON.parse(body)["Plot"]);
+                      console.log("Actors: " + JSON.parse(body)["Actors"]);
+                      console.log("Rotten Tomatoes Rating: " + JSON.parse(body)["tomatoRating"]);
+                      console.log("Rotten Tomatoes URL: " + JSON.parse(body)["tomatoURL"]);
+                  }
+
+            });
+
+        };
