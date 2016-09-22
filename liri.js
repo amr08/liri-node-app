@@ -44,32 +44,35 @@
     }
 
 //TWITTER/////////////
-  var twits = keys.twitterKeys;
-  var client = new Twitter(twits);
+twitterFunction();
+  function twitterFunction() {
+    var twits = keys.twitterKeys;
+    var client = new Twitter(twits);
 
-  var params = {screen_name: 'amrdev08'};
+    var params = {screen_name: 'amrdev08'};
 
-      client.get('statuses/user_timeline', params, function(error, tweets, response) {
-          if (!error) {
-             }
+        client.get('statuses/user_timeline', params, function(error, tweets, response) {
+            if (!error) {
+               }
 
-          if (userCommand == "my-tweets") {
-//I only have 8 tweets to pull from!
-              function tweet(a) {
-                  console.log("----TWEETS!------------");
-                  console.log("Tweet Created on: " + tweets[a].created_at)
-                  append("Tweet Created on: " + tweets[a].created_at)
-                  console.log("Tweet: " + tweets[a].text)
-                  append("Tweet: " + tweets[a].text)
-                }
+            if (userCommand || computerCommand == "my-tweets") {
+  //I only have 8 tweets to pull from!
+                function tweet(a) {
+                    console.log("----TWEETS!------------");
+                    console.log("Tweet Created on: " + tweets[a].created_at)
+                    append("Tweet Created on: " + tweets[a].created_at)
+                    console.log("Tweet: " + tweets[a].text)
+                    append("Tweet: " + tweets[a].text)
+                  }
 
-//loops through to retrieve tweets
-              for(var i = 0; i < 8; i++) {
-                  tweet([i])
-                }
-          };
-      });
+  //loops through to retrieve tweets
+                for(var i = 0; i < 8; i++) {
+                    tweet([i])
+                  }
+            };
+        });
 
+  };
 
 //SPOTIFY////////////
 
@@ -175,54 +178,62 @@ if (userCommand == "do-what-it-says") {
         var computerCommand = (dataArr[0]);
         var computerSearch = (dataArr[1])
 
-    //ComputerSpotify
-        if(computerCommand == "spotify-this-song") {
-          spotify.search({ type: 'track', query: computerSearch}, function(err, data) {
-              if ( err ) {
-                    console.log('Error occurred: ' + err);
-                    return;
-                 }
+          //ComputerSpotify
+              if(computerCommand == "spotify-this-song") {
+                spotify.search({ type: 'track', query: computerSearch}, function(err, data) {
+                    if ( err ) {
+                          console.log('Error occurred: ' + err);
+                          return;
+                       }
 
-          else {
-                console.log("-----------------------reading from file random.txt");
-                consoleSongs(data);
-                console.log("-----------------------end reading from random.txt//////////////");
-             }
+                else {
+                      console.log("-----------------------reading from file random.txt");
+                      consoleSongs(data);
+                      console.log("-----------------------end reading from random.txt//////////////");
+                   }
 
-             append("Artist: " + data.tracks.items[0].artists[0].name
-             + " Song Title: " + data.tracks.items[0].name
-             + " Link to Song: " + data.tracks.items[0].href
-             + " Album: " + data.tracks.items[0].album.name)
-       });
-    }
+                   append("Artist: " + data.tracks.items[0].artists[0].name
+                   + " Song Title: " + data.tracks.items[0].name
+                   + " Link to Song: " + data.tracks.items[0].href
+                   + " Album: " + data.tracks.items[0].album.name)
+                 });
+               };
+
+      //twitter trigger
+            if (computerCommand == "my-tweets") {
+                  console.log("running");
+                  twitterFunction();
+                };
+
+      //Computer Movie
+             if (computerCommand == "movie-this") {
+                  var computerSearch = computerSearch.replace(/'/g,"");
+                  //Type in no quotations and it works
+                  console.log(computerSearch);
+                  var queryUrl = "http://www.omdbapi.com/?t=" + computerSearch + "&y=&tomatoes=true&plot=short&r=json";
+
+                  request(queryUrl, function(error, response, body) {
+                      console.log(queryUrl)
+                         if(!error && response.statusCode == 200) {
+                          console.log("-----------------------reading from file random.txt");
+                          consoleMovies(body);
+                          console.log("-----------------------end reading from random.txt//////////////");
+                        }
+
+                  append("Title: " + JSON.parse(body)["Title"]
+                      + "Year: " + JSON.parse(body)["Year"]
+                      + "Country: " + JSON.parse(body)["Country"]
+                      + "Language: " + JSON.parse(body)["Language"]
+                      + "Plot: " + JSON.parse(body)["Plot"]
+                      + "Actors: " + JSON.parse(body)["Actors"]
+                      + "Rotten Tomatoes Rating: " + JSON.parse(body)["tomatoRating"]
+                      + "Rotten Tomatoes URL: " + JSON.parse(body)["tomatoURL"])
+                });
+              };
 
 
-//Computer Movie
- else if (computerCommand == "movie-this") {
-      var computerSearch = computerSearch.replace(/'/g,"");
-      console.log(computerSearch);
-      var queryUrl = "http://www.omdbapi.com/?t=" + computerSearch + "&y=&tomatoes=true&plot=short&r=json";
+//ends readfile
+    });
 
-        request(queryUrl, function(error, response, body) {
-          console.log(queryUrl)
-           if(!error && response.statusCode == 200) {
-            consoleMovies(body);
-            console.log("-----------------------end reading from random.txt//////////////");
-          }
-
-          append("Title: " + JSON.parse(body)["Title"]
-              + "Year: " + JSON.parse(body)["Year"]
-              + "Country: " + JSON.parse(body)["Country"]
-              + "Language: " + JSON.parse(body)["Language"]
-              + "Plot: " + JSON.parse(body)["Plot"]
-              + "Actors: " + JSON.parse(body)["Actors"]
-              + "Rotten Tomatoes Rating: " + JSON.parse(body)["tomatoRating"]
-              + "Rotten Tomatoes URL: " + JSON.parse(body)["tomatoURL"])
-            });
-    }
-
-
-
-  });
-  
+//ends do-what-it-says
 };
