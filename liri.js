@@ -12,7 +12,15 @@
 //FUNCTION
 
   function append(info) {
-    fs.appendFile("log.txt", info, function(err) {
+
+    //  JSON.stringify(info);
+
+    var prettyInfo =info.map(function(datum) {
+      return JSON.stringify(datum);
+    });
+    console.log(info)
+
+    fs.appendFile("log.txt", prettyInfo, function(err) {
 
   				if(err) {
   					return console.log(err);
@@ -36,9 +44,16 @@
              }
 
           if (userCommand == "my-tweets") {
-               console.log(tweets)
-              //  append(tweets);
-             }
+            function tweet(a) {
+                console.log("---------TWEETS!------------");
+                console.log("Tweet Created on: " + tweets[a].created_at)
+                console.log("Tweet: " + tweets[a].text)
+              }
+              tweet(0)
+              tweet(1)
+              tweet(2)
+              tweet(3)
+          }
       });
 
 
@@ -57,10 +72,10 @@
                   console.log("Link to Song: " + data.tracks.items[0].href);
                   console.log("Album: " + data.tracks.items[0].album.name);
 
-                //   append(console.log("Artist: " + data.tracks.items[0].artists[0].name),
-                //         console.log("Song Title: " + data.tracks.items[0].name),
-                //         console.log("Link to Song: " + data.tracks.items[0].href),
-                //         console.log("Album: " + data.tracks.items[0].album.name))
+                  append(console.log("Artist: " + data.tracks.items[0].artists[0].name),
+                        console.log("Song Title: " + data.tracks.items[0].name),
+                        console.log("Link to Song: " + data.tracks.items[0].href),
+                        console.log("Album: " + data.tracks.items[0].album.name))
                 }
 
         });
@@ -153,10 +168,12 @@ fs.readFile("random.txt", "utf8", function(error, data) {
              }
 
           else {
+                console.log("-----------------------reading from file random.txt");
                 console.log("Artist: " + data.tracks.items[0].artists[0].name);
                 console.log("Song Title: " + data.tracks.items[0].name);
                 console.log("Link to Song: " + data.tracks.items[0].href);
                 console.log("Album: " + data.tracks.items[0].album.name);
+                console.log("-----------------------end reading from random.txt//////////////");
              }
       });
     }
@@ -164,14 +181,14 @@ fs.readFile("random.txt", "utf8", function(error, data) {
 
 //Computer Movie
  if (computerCommand == "movie-this") {
-
-
+      var computerSearch = computerSearch.replace(/'/g,"");
+      console.log(computerSearch);
       var queryUrl = "http://www.omdbapi.com/?t=" + computerSearch + "&y=&tomatoes=true&plot=short&r=json";
-      console.log(queryUrl)
+
         request(queryUrl, function(error, response, body) {
-
+          console.log(queryUrl)
            if(!error && response.statusCode == 200) {
-
+            console.log("-----------------------reading from file random.txt");
             console.log("Title: " + JSON.parse(body)["Title"]);
             console.log("Year: " + JSON.parse(body)["Year"]);
             console.log("Country: " + JSON.parse(body)["Country"]);
@@ -180,7 +197,7 @@ fs.readFile("random.txt", "utf8", function(error, data) {
             console.log("Actors: " + JSON.parse(body)["Actors"]);
             console.log("Rotten Tomatoes Rating: " + JSON.parse(body)["tomatoRating"]);
             console.log("Rotten Tomatoes URL: " + JSON.parse(body)["tomatoURL"]);
-
+            console.log("-----------------------end reading from random.txt//////////////");
           }
 
         });
