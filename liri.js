@@ -9,24 +9,17 @@
   var request = require("request");
 
 
-//FUNCTION
+//FUNCTION to add text to log.txt
 
   function append(info) {
 
-    //  JSON.stringify(info);
+  var pretty = JSON.stringify(info, null, 2);
 
-    var prettyInfo =info.map(function(datum) {
-      return JSON.stringify(datum);
-    });
-    console.log(info)
-
-    fs.appendFile("log.txt", prettyInfo, function(err) {
+    fs.appendFile("log.txt", pretty, function(err) {
 
   				if(err) {
   					return console.log(err);
   				}
-
-  				console.log("content added to log")
 
   			});
   }
@@ -44,15 +37,17 @@
              }
 
           if (userCommand == "my-tweets") {
+//I only have 8 tweets!
             function tweet(a) {
-                console.log("---------TWEETS!------------");
+                console.log("----TWEETS!------------");
                 console.log("Tweet Created on: " + tweets[a].created_at)
+                append("Tweet Created on: " + tweets[a].created_at)
                 console.log("Tweet: " + tweets[a].text)
+                append("Tweet: " + tweets[a].text)
               }
-              tweet(0)
-              tweet(1)
-              tweet(2)
-              tweet(3)
+              for(var i = 0; i < 8; i++) {
+                tweet([i])
+            }
           }
       });
 
@@ -72,17 +67,16 @@
                   console.log("Link to Song: " + data.tracks.items[0].href);
                   console.log("Album: " + data.tracks.items[0].album.name);
 
-                  append(console.log("Artist: " + data.tracks.items[0].artists[0].name),
-                        console.log("Song Title: " + data.tracks.items[0].name),
-                        console.log("Link to Song: " + data.tracks.items[0].href),
-                        console.log("Album: " + data.tracks.items[0].album.name))
                 }
+                append("Artist: " + data.tracks.items[0].artists[0].name +
+                " Song Title: " + data.tracks.items[0].name +
+                " Link to Song: " + data.tracks.items[0].href +
+                " Album: " + data.tracks.items[0].album.name)
 
         });
     }
 
     else if (userCommand == "spotify-this-song" && "undefined") {
-      console.log("no user command working")
         var userSearch = "the sign";
         console.log(userSearch)
         spotify.search({ type: 'track', query: userSearch }, function(err, data) {
@@ -99,6 +93,10 @@
                 console.log("Album: " + data.tracks.items[8].album.name);
               }
 
+              append("Artist: " + data.tracks.items[8].artists[0].name +
+              " Song Title: " + data.tracks.items[8].name +
+              " Link to Song: " + data.tracks.items[8].href +
+              " Album: " + data.tracks.items[8].album.name)
         });
     };
 
@@ -120,6 +118,16 @@
                   console.log("Rotten Tomatoes URL: " + JSON.parse(body)["tomatoURL"]);
 
                 }
+
+                append("Title: " + JSON.parse(body)["Title"] +
+                       "Year: " + JSON.parse(body)["Year"] +
+                       "Country: " + JSON.parse(body)["Country"] +
+                       "Language: " + JSON.parse(body)["Language"] +
+                       "Plot: " + JSON.parse(body)["Plot"] +
+                       "Actors: " + JSON.parse(body)["Actors"] +
+                       "Rotten Tomatoes Rating: " + JSON.parse(body)["tomatoRating"] +
+                       "Rotten Tomatoes URL: " + JSON.parse(body)["tomatoURL"]);
+
               });
             }
 
@@ -139,7 +147,16 @@
                       console.log("Actors: " + JSON.parse(body)["Actors"]);
                       console.log("Rotten Tomatoes Rating: " + JSON.parse(body)["tomatoRating"]);
                       console.log("Rotten Tomatoes URL: " + JSON.parse(body)["tomatoURL"]);
+
                   }
+                  append("Title: " + JSON.parse(body)["Title"] +
+                         "Year: " + JSON.parse(body)["Year"] +
+                         "Country: " + JSON.parse(body)["Country"] +
+                         "Language: " + JSON.parse(body)["Language"] +
+                         "Plot: " + JSON.parse(body)["Plot"] +
+                         "Actors: " + JSON.parse(body)["Actors"] +
+                         "Rotten Tomatoes Rating: " + JSON.parse(body)["tomatoRating"] +
+                         "Rotten Tomatoes URL: " + JSON.parse(body)["tomatoURL"]);
 
             });
 
@@ -148,7 +165,7 @@
 //DO WHAT IT SAYS
 
 
-
+if (userCommand == "do-what-it-says") {
 fs.readFile("random.txt", "utf8", function(error, data) {
     var dataArr = data.split(",");
     var computerCommand = (dataArr[0]);
@@ -175,6 +192,10 @@ fs.readFile("random.txt", "utf8", function(error, data) {
                 console.log("Album: " + data.tracks.items[0].album.name);
                 console.log("-----------------------end reading from random.txt//////////////");
              }
+             append("Artist: " + data.tracks.items[0].artists[0].name) +
+             " Song Title: " + data.tracks.items[0].name +
+            " Link to Song: " + data.tracks.items[0].href +
+             " Album: " + data.tracks.items[0].album.name)
       });
     }
 
@@ -200,9 +221,18 @@ fs.readFile("random.txt", "utf8", function(error, data) {
             console.log("-----------------------end reading from random.txt//////////////");
           }
 
+          append(  "Title: " + JSON.parse(body)["Title"] +
+          "Year: " + JSON.parse(body)["Year"] +
+          "Country: " + JSON.parse(body)["Country"] +
+          "Language: " + JSON.parse(body)["Language"] +
+            "Plot: " + JSON.parse(body)["Plot"] +
+            "Actors: " + JSON.parse(body)["Actors"] +
+            "Rotten Tomatoes Rating: " + JSON.parse(body)["tomatoRating"] +
+            "Rotten Tomatoes URL: " + JSON.parse(body)["tomatoURL"])
         });
     }
 
 
 
 });
+};
