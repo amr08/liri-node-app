@@ -44,19 +44,18 @@
     }
 
 //TWITTER/////////////
-twitterFunction();
-  function twitterFunction() {
+
     var twits = keys.twitterKeys;
     var client = new Twitter(twits);
 
     var params = {screen_name: 'amrdev08'};
 
+    function twitterFunction(){
+
         client.get('statuses/user_timeline', params, function(error, tweets, response) {
             if (!error) {
                }
-
-            if (userCommand || computerCommand == "my-tweets") {
-  //I only have 8 tweets to pull from!
+    //I only have 8 tweets to pull from!
                 function tweet(a) {
                     console.log("----TWEETS!------------");
                     console.log("Tweet Created on: " + tweets[a].created_at)
@@ -66,12 +65,16 @@ twitterFunction();
                   }
 
   //loops through to retrieve tweets
-                for(var i = 0; i < 8; i++) {
-                    tweet([i])
-                  }
-            };
+              for(var i = 0; i < 8; i++) {
+                 tweet([i])
+               }
+
         });
 
+    };
+
+  if (userCommand == "my-tweets") {
+    twitterFunction();
   };
 
 //SPOTIFY////////////
@@ -171,14 +174,20 @@ twitterFunction();
 
 
 //DO WHAT IT SAYS
-
 if (userCommand == "do-what-it-says") {
+
     fs.readFile("random.txt", "utf8", function(error, data) {
         var dataArr = data.split(",");
         var computerCommand = (dataArr[0]);
         var computerSearch = (dataArr[1])
 
-          //ComputerSpotify
+
+    //twitter trigger
+              if (computerCommand == "my-tweets") {
+                    twitterFunction();
+                  };
+
+      //ComputerSpotify
               if(computerCommand == "spotify-this-song") {
                 spotify.search({ type: 'track', query: computerSearch}, function(err, data) {
                     if ( err ) {
@@ -198,12 +207,6 @@ if (userCommand == "do-what-it-says") {
                    + " Album: " + data.tracks.items[0].album.name)
                  });
                };
-
-      //twitter trigger
-            if (computerCommand == "my-tweets") {
-                  console.log("running");
-                  twitterFunction();
-                };
 
       //Computer Movie
              if (computerCommand == "movie-this") {
